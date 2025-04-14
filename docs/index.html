@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kharal</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,8 +26,65 @@
         }
         .controls {
             display: flex;
-            gap: 10px;
+            gap: 15px;
+            align-items: center;
         }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 30px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "\f185";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            height: 26px;
+            width: 26px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            text-align: center;
+            line-height: 26px;
+            font-size: 14px;
+            color: #f39c12;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #444;
+        }
+        input:checked + .slider:before {
+            transform: translateX(30px);
+            content: "\f186";
+            color: #3498db;
+        }
+
+        .language-icon {
+            font-size: 20px;
+            cursor: pointer;
+        }
+        select {
+            display: none;
+        }
+
         .blog-list {
             max-width: 800px;
             margin: 0 auto;
@@ -34,9 +92,10 @@
         .blog-preview {
             border-bottom: 1px solid #ccc;
             padding: 15px 0;
+            position: relative;
         }
-        .blog-preview:last-child {
-            border-bottom: none;
+        .dark-mode .blog-preview {
+            border-bottom: 1px solid #555;
         }
         .blog-title {
             margin: 0;
@@ -47,41 +106,33 @@
             font-size: 0.9em;
             margin: 5px 0;
         }
-        .blog-excerpt {
-            margin: 10px 0;
-        }
-        .blog-content {
-            display: none;
-            margin-top: 10px;
-        }
-        .blog-content.active {
-            display: block;
-        }
-        .read-more {
-            background: #007bff;
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            cursor: pointer;
-        }
-        .read-more:hover {
-            background: #0056b3;
-        }
-        .dark-mode .blog-preview {
-            border-bottom: 1px solid #555;
-        }
-        .dark-mode .read-more {
-            background: #3399ff;
-        }
-        .dark-mode .read-more:hover {
-            background: #287acc;
-        }
         .dark-mode .blog-meta {
             color: #aaa;
         }
-        button, select {
-            padding: 8px;
+        .blog-content {
+            margin-top: 10px;
+            overflow: hidden;
+        }
+        .read-more {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(5px);
+            color: #000;
+            border: none;
+            padding: 8px 15px;
             cursor: pointer;
+            position: absolute;
+            bottom: 15px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            width: 150px;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .dark-mode .read-more {
+            background: rgba(50, 50, 50, 0.8);
+            color: #fff;
         }
     </style>
 </head>
@@ -89,22 +140,23 @@
     <header class="header">
         <h1 id="site-title">Thoughts</h1>
         <div class="controls">
+            <label class="toggle-switch">
+                <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+                <span class="slider"></span>
+            </label>
+            <i class="fas fa-language language-icon" onclick="toggleLanguage()"></i>
             <select id="language-switch" onchange="switchLanguage()">
                 <option value="en">En</option>
                 <option value="ne">Ne</option>
             </select>
-            <button id="theme-toggle" onclick="toggleTheme()">Dark</button>
         </div>
     </header>
-    <div class="blog-list" id="blog-list">
-        <!-- Blog previews will be dynamically inserted here -->
-    </div>
+    <div class="blog-list" id="blog-list"></div>
 
     <script>
         let blogs = [];
         let currentLang = 'en';
 
-        // Fetch blogs from JSON
         fetch('blogs.json')
             .then(response => response.json())
             .then(data => {
@@ -116,7 +168,7 @@
         function renderBlogs() {
             const blogList = document.getElementById('blog-list');
             blogList.innerHTML = '';
-            blogs.forEach(blog => {
+            blogs.forEach((blog, index) => {
                 const blogDiv = document.createElement('div');
                 blogDiv.className = 'blog-preview';
                 blogDiv.innerHTML = `
@@ -125,11 +177,13 @@
                         <span>${blog.dateCreated}</span> | 
                         <span>${blog.tags.join(', ')}</span>
                     </div>
-                    <p class="blog-excerpt">${blog.excerpt[currentLang]}</p>
-                    <button class="read-more" onclick="toggleContent(this)">${
-                        currentLang === 'en' ? 'Read More' : 'थप पढ्नुहोस्'
-                    }</button>
-                    <div class="blog-content">${blog.content[currentLang]}</div>
+                    <div class="blog-content" id="content-${index}">
+                        <p><strong>${blog.excerpt[currentLang]}</strong></p>
+                        <p style="filter: blur(4px); transition: filter 0.5s ease;">${blog.content[currentLang]}</p>
+                    </div>
+                    <button class="read-more" onclick="revealContent(${index}, this)">
+                        ${currentLang === 'en' ? 'Read More' : 'थप पढ्नुहोस्'}
+                    </button>
                 `;
                 blogList.appendChild(blogDiv);
             });
@@ -137,39 +191,28 @@
 
         function toggleTheme() {
             document.body.classList.toggle('dark-mode');
-            const button = document.getElementById('theme-toggle');
-            button.textContent = document.body.classList.contains('dark-mode') ? 'Light Mode' : 'Dark Mode';
+        }
+
+        function toggleLanguage() {
+            const select = document.getElementById('language-switch');
+            select.selectedIndex = (select.selectedIndex + 1) % select.options.length;
+            select.dispatchEvent(new Event('change'));
         }
 
         function switchLanguage() {
             currentLang = document.getElementById('language-switch').value;
             document.documentElement.lang = currentLang;
-            const siteTitle = document.getElementById('site-title');
-            siteTitle.textContent = currentLang === 'en' ? 'Thoughts' : 'विचारहरू';
-            renderBlogs(); // Re-render blogs to update language
-            updateReadMoreButtons();
+            document.getElementById('site-title').textContent = currentLang === 'en' ? 'Thoughts' : 'विचारहरू';
+            renderBlogs();
         }
 
-        function toggleContent(button) {
-            const content = button.nextElementSibling;
-            const isActive = content.classList.contains('active');
-            content.classList.toggle('active');
-            button.textContent = isActive 
-                ? (currentLang === 'en' ? 'Read More' : 'थप पढ्नुहोस्')
-                : (currentLang === 'en' ? 'Read Less' : 'कम पढ्नुहोस्');
+        function revealContent(index, button) {
+            const contentDiv = document.getElementById(`content-${index}`);
+            const para = contentDiv.querySelector('p + p');
+            para.style.filter = 'none';
+            button.style.display = 'none';
         }
 
-        function updateReadMoreButtons() {
-            const buttons = document.querySelectorAll('.read-more');
-            buttons.forEach(button => {
-                const content = button.nextElementSibling;
-                button.textContent = content.classList.contains('active')
-                    ? (currentLang === 'en' ? 'Read Less' : 'कम पढ्नुहोस्')
-                    : (currentLang === 'en' ? 'Read More' : 'थप पढ्नुहोस्');
-            });
-        }
-
-        // Initialize language
         switchLanguage();
     </script>
 </body>
