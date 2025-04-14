@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "title": {
+      "en": "First Blog Post",
+      "ne": "पहिलो ब्लग पोष्ट"
+    },
+    "excerpt": {
+      "en": "This is a short preview of the first blog post.",
+      "ne": "यो पहिलो ब्लग पोष्टको छोटो पूर्वावलोकन हो।"
+    },
+    "content": {
+      "en": "This is the full content of the first blog post. It includes all the details you want to share with your readers.",
+      "ne": "यो पहिलो ब्लग पोष्टको पूर्ण सामग्री हो। यसमा तपाईंले आफ्ना पाठकहरूसँग साझा गर्न चाहनुभएका सबै विवरणहरू समावेश छन्।"
+    },
+    "tags": ["intro", "blogging"],
+    "dateCreated": "2025-04-01"
+  },
+  {
+    "id": 2,
+    "title": {
+      "en": "Second Blog Post",
+      "ne": "दोस्रो ब्लग पोष्ट"
+    },
+    "excerpt": {
+      "en": "A brief excerpt from the second post.",
+      "ne": "दोस्रो पोष्टबाट संक्षिप्त अंश।"
+    },
+    "content": {
+      "en": "Here is the complete content for the second blog post. Add as much text as you like here.",
+      "ne": "यहाँ दोस्रो ब्लग पोष्टको लागि पूर्ण सामग्री छ। यहाँ तपाईंले चाहेजति पाठ थप्न सक्नुहुन्छ।"
+    },
+    "tags": ["update", "news"],
+    "dateCreated": "2025-04-10"
+  }
+]
