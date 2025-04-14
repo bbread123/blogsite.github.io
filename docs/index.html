@@ -140,15 +140,16 @@
     <header class="header">
         <h1 id="site-title">Thoughts</h1>
         <div class="controls">
-            <label class="toggle-switch">
-                <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
-                <span class="slider"></span>
-            </label>
-            <i class="fas fa-language language-icon" onclick="toggleLanguage()"></i>
+             <i class="fas fa-language language-icon" onclick="toggleLanguage()"></i>
             <select id="language-switch" onchange="switchLanguage()">
                 <option value="en">En</option>
                 <option value="ne">Ne</option>
             </select>
+            <label class="toggle-switch">
+                <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+                <span class="slider"></span>
+            </label>
+           
         </div>
     </header>
     <div class="blog-list" id="blog-list"></div>
