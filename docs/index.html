@@ -161,7 +161,7 @@
         fetch('blogs.json')
             .then(response => response.json())
             .then(data => {
-                blogs = data;
+                blogs = data.reverse();
                 renderBlogs();
             })
             .catch(error => console.error('Error loading blogs:', error));
