@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simple Blog</title>
+    <title>Kharal</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -87,13 +87,13 @@
 </head>
 <body>
     <header class="header">
-        <h1 id="site-title">My Blog</h1>
+        <h1 id="site-title">Thoughts</h1>
         <div class="controls">
             <select id="language-switch" onchange="switchLanguage()">
-                <option value="en">English</option>
-                <option value="ne">Nepali</option>
+                <option value="en">En</option>
+                <option value="ne">Ne</option>
             </select>
-            <button id="theme-toggle" onclick="toggleTheme()">Dark Mode</button>
+            <button id="theme-toggle" onclick="toggleTheme()">Dark</button>
         </div>
     </header>
     <div class="blog-list" id="blog-list">
@@ -145,7 +145,7 @@
             currentLang = document.getElementById('language-switch').value;
             document.documentElement.lang = currentLang;
             const siteTitle = document.getElementById('site-title');
-            siteTitle.textContent = currentLang === 'en' ? 'My Blog' : 'मेरो ब्लग';
+            siteTitle.textContent = currentLang === 'en' ? 'Thoughts' : 'विचारहरू';
             renderBlogs(); // Re-render blogs to update language
             updateReadMoreButtons();
         }
